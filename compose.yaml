@@ -1,0 +1,38 @@
+services:
+
+  hz:
+    image: hazelcast/hazelcast:latest
+    environment:
+      JAVA_OPTS: -Dhazelcast.config=/project/hazelcast.yaml
+    ports:
+      - "5701:5701"
+    volumes:
+      - ".:/project"
+    networks:
+      - hazelcast
+
+  mc:
+    image: hazelcast/management-center:latest
+    environment:
+      MC_DEFAULT_CLUSTER: dev
+      MC_DEFAULT_CLUSTER_MEMBERS: hz:5701
+    ports:
+      - "8080:8080"
+    networks:
+      - hazelcast
+
+  #trade_generator:
+  #  image: openjdk:11
+  #  command: java -jar /project/trade-generator/target/trade-generator-1.0-SNAPSHOT.jar
+  #  environment:
+  #    HZ_SERVERS: hz
+  #    HZ_CLUSTER_NAME: dev
+  #    MACHINE_COUNT: 10
+  #  volumes:
+  #    - ".:/project"
+  #  networks:
+  #    - hazelcast
+
+networks:
+  hazelcast:
+  
